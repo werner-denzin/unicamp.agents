@@ -1,0 +1,1 @@
+user prompt -> tokenizer -> embeddings -> são passados para a arquitetura do Transformers (mecanismos de atencão / encoder-decoder / decoder-only) -> geram 1 token de cada vez, usados para a geração do próximo token
