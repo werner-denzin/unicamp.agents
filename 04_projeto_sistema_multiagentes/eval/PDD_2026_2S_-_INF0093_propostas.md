@@ -304,6 +304,46 @@ Três pontos que valem para a nota:
 - Mais de 5–6 agentes: o custo de coordenação cresce mais rápido que a nota.
 - Deixar a avaliação para a última semana — ela é 30% e precisa de ground truth construído com antecedência.
 - Notebook que só funciona com estado residual de execuções anteriores.
+## Datasets candidatos
+
+Acessos verificados em 28/08/2026. Tamanhos medidos por `content-length`; esquemas lidos via *range request*
+no diretório central do zip, sem baixar os arquivos inteiros.
+
+### Escolhidos
+
+| Fonte | Link | Tamanho | Observação |
+|---|---|---|---|
+| **ENEM 2023 — microdados** | https://download.inep.gov.br/microdados/microdados_enem_2023.zip | 550 MB zip → 1,78 GB CSV | **Arquivo único, 76 colunas**: `NU_INSCRICAO` + `NU_NOTA_*` + `Q001..Q025` no mesmo registro |
+| **IBGE — API de Agregados (v3)** | https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/2021/variaveis/9324?localidades=N6[all] | 690 KB JSON | Sem chave; 5.571 municípios |
+| **IBGE — Localidades** | https://servicodados.ibge.gov.br/api/v1/localidades/municipios | 2,4 MB JSON | Sem chave; para normalizar código/nome de município |
+| **IBGE — API SIDRA** | https://apisidra.ibge.gov.br/values/t/6579/n6/all/v/9324/p/2021 | 1,5 MB JSON | Mesma base, sintaxe alternativa |
+
+### Alternativas do ENEM
+
+| Edição | Link | Tamanho | Observação |
+|---|---|---|---|
+| ENEM 2025 | https://download.inep.gov.br/microdados/microdados_enem_2025.zip | 630 MB zip | Mais atual, mas **dividido**: `PARTICIPANTES` (38 col) e `RESULTADOS` (70 col) **sem chave em comum** — só cruzam por município/UF da prova |
+| ENEM 2024 | https://download.inep.gov.br/microdados/microdados_enem_2024.zip | 526 MB zip | Mesma divisão do 2025 |
+| Sinopse Estatística ENEM 2025 | https://download.inep.gov.br/informacoes_estatisticas/sinopses_estatisticas/sinopses_enem/2025/sinopse_enem_2025.zip | 2 MB | Leve, mas são **121 abas** de tabelas formatadas — não é tabela tidy |
+| Página oficial (todas as edições) | https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem | — | Edições de 1998 a 2025 |
+
+### Descartados, e por quê
+
+| Fonte | Link | Motivo |
+|---|---|---|
+| Portal da Transparência | https://portaldatransparencia.gov.br/download-de-dados | Novo Bolsa Família 01/2026 = **346 MB** num zip mensal |
+| DATASUS | https://github.com/AlertaDengue/PySUS | Formato `.DBC` proprietário; exige `pysus` para converter |
+| dados.gov.br (API) | https://dados.gov.br/ | Responde `HTTP 401` — requer cadastro e chave |
+| Base dos Dados | https://basedosdados.org/ | Exige conta Google e `billing_project_id` (BigQuery) |
+| INEP — IDEB | https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/ideb | Planilhas `xlsx`/`ods` com cabeçalho mesclado |
+
+### Armadilhas verificadas
+
+- **Certificado do INEP**: `download.inep.gov.br` serve cadeia incompleta (emissor RNP ICPEdu). `pd.read_csv(url)`
+  falha com `unable to get local issuer certificate` — use `requests.get(..., verify=False)` e documente o motivo.
+- **Formato dos CSV do INEP**: separador `;` e encoding `latin-1`.
+- **Entrega é só o `.ipynb`**: nenhum arquivo de dados sobe junto, então o notebook precisa baixar os dados
+  sozinho. Baixe uma vez, recorte com `usecols` e persista em parquet.
 
 ## Referências
 
