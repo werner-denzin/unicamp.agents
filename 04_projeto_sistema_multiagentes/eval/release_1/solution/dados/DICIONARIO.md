@@ -1,7 +1,7 @@
 # Dicionário de dados — `enem2023_ibge_municipios.csv`
 
 Artefato pré-processado do Entregável 1. Uma linha por **município da escola**
-do candidato. Gerado por `etl/build_dataset.py` (execução única, fora do grafo).
+do candidato. Gerado pelo ETL descrito na seção 12 do notebook (execução única, fora do grafo).
 
 | Coluna | Tipo | Descrição |
 |---|---|---|
