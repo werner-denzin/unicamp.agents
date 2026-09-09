@@ -1,0 +1,103 @@
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:34] INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Campinas', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:35] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Bom Jesus', uf=None) -> 5 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:40] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Santana do Livramento', uf=None) -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:40] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Xique Xique do Nada', uf=None) -> 0 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:41] INFO     Processing request of type            server.py:733
+                             ReadResourceRequest                                
+[servidor] resource dataset://enem2023/esquema
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:44] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Santana do Livramento', uf=None) -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Campinas', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:10:59] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Campinas', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:12:32] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Campinas', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:14:24] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Campinas', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:17:58] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='São Paulo', uf='SP') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:19:16] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Salvador', uf='BA') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:19:40] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Recife', uf='PE') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:20:21] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Belo Horizonte', uf='MG') -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:21:19] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='São Paulo', uf=None) -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:22:06] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Santana do Livramento', uf=None) -> 1 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   
+[servidor] pronto: 5481 municipios x 15 colunas de enem2023_ibge_municipios.csv
+[09/08/26 17:22:47] INFO     Processing request of type            server.py:733
+                             CallToolRequest                                    
+[servidor] buscar_municipio(nome='Bom Jesus', uf=None) -> 5 municipio(s)
+                    INFO     Processing request of type            server.py:733
+                             ListToolsRequest                                   

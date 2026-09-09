@@ -1,0 +1,35 @@
+Implementação concluída. O notebook está em 04_projeto_sistema_multiagentes/eval/release_2/final/E2_DallaCosta_Murer_Denzin.ipynb, executado do início ao fim em 750 segundos, com 78 células, 48 de código e zero erros.
+
+O que foi construído
+
+Servidor MCP local (servidor_dados_enem.py, escrito pelo próprio notebook), subprocesso por stdio, uma tool e um resource, somente leitura de um CSV. O resource devolve um esquema idêntico ao construído localmente, e o notebook verifica isso.
+
+Grafo LangGraph com seis nós e quatro roteadores, recursion_limit=15 e no máximo duas rodadas de busca. Memória por thread_id com InMemorySaver, os 13 casos congelados rodando stateless. Bloco herdado do E1 extraído célula a célula do arquivo original, com impressão digital sha256 do conjunto.
+
+Os resultados
+
+┌───────────────────────────┬────────────┬───────────────────┬────────────┐
+│                           │     v1     │ v2 sem ferramenta │     v2     │
+├───────────────────────────┼────────────┼───────────────────┼────────────┤
+│ Acertos nos 13 congelados │ 10/11      │ 11/11             │ 10/11      │
+├───────────────────────────┼────────────┼───────────────────┼────────────┤
+│ Chamadas ao LLM           │ 15         │ 15                │ 30         │
+├───────────────────────────┼────────────┼───────────────────┼────────────┤
+│ Chamadas a ferramenta     │ 0          │ 0                 │ 8          │
+├───────────────────────────┼────────────┼───────────────────┼────────────┤
+│ Custo                     │ US$ 0,0063 │ US$ 0,0064        │ US$ 0,0085 │
+└───────────────────────────┴────────────┴───────────────────┴────────────┘
+
+Empate na régua congelada, com toda a diferença em T03. O baseline reexecutado hoje deu 10/11, não os 11/11 do E1 — mesmo modelo, mesma temperatura, mesmo prompt, outro dia. É a prova prática de por que o enunciado exige reexecutar na mesma sessão.
+
+T14 virou o caso mais instrutivo do notebook. A ferramenta funcionou: só a v2 produziu Sant'Ana do Livramento, que o modelo não tinha como adivinhar. Mas ele emitiu as aspas escapadas e a guarda herdada recusou o código. A v2 resolveu a limitação que se propôs a resolver e foi derrubada por outra, que ela deliberadamente não tocou nesta versão. Isso deu à pergunta obrigatória uma resposta com dado, não com aposta: o Validador, porque 3 das 5 falhas de execução são mecânicas e recuperáveis, e foi a única categoria que atingiu as duas versões.
+
+T15 subiu de 0 para 1 na rubrica. T12 e T13 continuam em 0 nas três configurações, exatamente como previsto.
+
+Três coisas que encontrei medindo, e que reportei em vez de esconder
+
+O contexto cresceu 6× em cinco turnos, de 2.060 para 12.359 tokens. Minha contagem de caracteres não explicava isso, então investiguei: cada mensagem do modelo carrega reasoning_content invisível a len(content). A contenção que projetei cobre o planejador, mas o canal de rascunho acumula ao longo do thread e o resolvedor recebe tudo. A correção está identificada e não aplicada, porque os casos de avaliação rodam stateless e não são afetados.
+
+Na demonstração de isolamento, a v2 sem contexto não se absteve: reinterpretou a pergunta como nacional e devolveu a média do país. Correto para a pergunta que ela decidiu responder, e difícil de detectar.
+
+Dois desvios de desenho, já registrados no plano: o emitir_plano como ferramenta única não sobreviveu ao truncamento em 2048 tokens do modelo, e adotei o Plano B; e o checkpointer não serializa objetos do pandas, o que forçou serialização no estado com reconstrução na borda, testada contra as verificações herdadas em todos os tipos de resultado.
