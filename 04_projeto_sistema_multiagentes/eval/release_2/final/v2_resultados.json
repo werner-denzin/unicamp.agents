@@ -1,0 +1,2037 @@
+{
+  "run_v1": {
+    "modelo": "openai/gpt-oss-20b",
+    "temperatura": 0,
+    "prompt_versao": "v1",
+    "data": "2026-09-08T17:10:32",
+    "python": "3.12.3"
+  },
+  "run_v2": {
+    "modelo": "openai/gpt-oss-20b",
+    "temperatura": 0,
+    "prompt_versao": "v2 (prompt da v1 + bloco de observações da ferramenta)",
+    "arquitetura": "v2-langgraph-mcp-memoria",
+    "data": "2026-09-08T17:10:33",
+    "python": "3.12.3",
+    "limite_passos": 15,
+    "max_rodadas_busca": 2
+  },
+  "dados": {
+    "origem": "https://raw.githubusercontent.com/werner-denzin/unicamp.agents/main/04_projeto_sistema_multiagentes/eval/data/enem2023_ibge_municipios.csv",
+    "linhas": 5481,
+    "participantes": 721429
+  },
+  "conjunto": {
+    "congelados": 13,
+    "novos": [
+      "T14",
+      "T15"
+    ],
+    "impressao_digital_congelados": "c9731876931388a771282ed8ce0db59ff8d68859198234ae0888871341332670",
+    "correcoes_no_conjunto": "nenhuma; o conjunto do E1 não tinha defeito"
+  },
+  "integracao": {
+    "capacidade": "Acesso de leitura ao artefato ENEM 2023 x IBGE 2021: resolve o nome de um município para a grafia exata do dataset (ignorando acento, caixa e pontuação), revela homônimos entre UFs e descreve o esquema das colunas.",
+    "implementacao": "MCP (servidor FastMCP local, transporte stdio, subprocesso da sessão)",
+    "tools": [
+      {
+        "nome": "buscar_municipio",
+        "args": {
+          "nome": "str (como o usuário escreveu)",
+          "uf": "str | None (sigla, opcional)"
+        },
+        "retorno": "JSON com encontrados:int, candidatos:[{municipio, uf, n_participantes, media_geral}] e aviso:str quando há homônimos ou nada é encontrado",
+        "erros": [
+          "encontrados=0 com aviso (nome inexistente no recorte)",
+          "servidor indisponível: a ferramenta desaparece do grafo",
+          "retorno em blocos de conteúdo exige desempacotamento no cliente"
+        ]
+      }
+    ],
+    "resources": [
+      {
+        "uri": "dataset://enem2023/esquema",
+        "retorno": "descrição das 15 colunas, no mesmo formato do ESQUEMA da v1"
+      }
+    ],
+    "clientes_previstos": [
+      "v2 (E2): nó resolvedor",
+      "E3: agente Validador, para conferir n_participantes antes de aprovar um resultado",
+      "E3: agente Visualizador, para obter as séries que vão ao gráfico",
+      "E4: suíte de avaliação ampliada, para gerar casos a partir do próprio dataset"
+    ],
+    "justificativa": "A capacidade tem dono e ciclo de vida próprios (o ETL do E1) e será consumida por mais de um agente no E3. Estabelecer a fronteira agora, com um consumidor só, é mais barato do que introduzi-la junto com dois clientes novos.",
+    "alternativa_descartada": "Ferramenta local no mesmo processo: mais simples, sem grafo assíncrono, sem processo extra e sem duas dependências. Descartada porque não cria a fronteira reutilizável, que é o objetivo do incremento; o custo dela está medido na seção E.",
+    "privilegio": "somente leitura de um arquivo CSV local, cujo caminho é passado por argumento; sem rede, sem escrita, sem execução de código"
+  },
+  "comparacao_conjunto_completo": {
+    "v1": {
+      "casos_totais": 15,
+      "casos_automaticos": 12,
+      "acertos": 10,
+      "taxa_aprovacao": 0.833,
+      "erros_execucao": 2,
+      "abstencoes": 3,
+      "latencia_mediana_s": 9.7,
+      "latencia_max_s": 15.35,
+      "chamadas_llm": 15,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 19944,
+      "tokens_saida": 8695,
+      "custo_estimado_usd": 0.006342,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    },
+    "v2 sem ferramenta": {
+      "casos_totais": 15,
+      "casos_automaticos": 12,
+      "acertos": 11,
+      "taxa_aprovacao": 0.917,
+      "erros_execucao": 1,
+      "abstencoes": 3,
+      "latencia_mediana_s": 7.82,
+      "latencia_max_s": 16.14,
+      "chamadas_llm": 15,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 19944,
+      "tokens_saida": 8885,
+      "custo_estimado_usd": 0.006437,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    },
+    "v2": {
+      "casos_totais": 15,
+      "casos_automaticos": 12,
+      "acertos": 10,
+      "taxa_aprovacao": 0.833,
+      "erros_execucao": 2,
+      "abstencoes": 3,
+      "latencia_mediana_s": 15.17,
+      "latencia_max_s": 21.15,
+      "chamadas_llm": 30,
+      "chamadas_tool": 8,
+      "erros_tool": 0,
+      "tokens_entrada": 29790,
+      "tokens_saida": 10989,
+      "custo_estimado_usd": 0.008474,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    }
+  },
+  "comparacao_casos_congelados": {
+    "v1": {
+      "casos_totais": 13,
+      "casos_automaticos": 11,
+      "acertos": 10,
+      "taxa_aprovacao": 0.909,
+      "erros_execucao": 1,
+      "abstencoes": 3,
+      "latencia_mediana_s": 10.75,
+      "latencia_max_s": 15.35,
+      "chamadas_llm": 13,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 17295,
+      "tokens_saida": 6803,
+      "custo_estimado_usd": 0.005131,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    },
+    "v2 sem ferramenta": {
+      "casos_totais": 13,
+      "casos_automaticos": 11,
+      "acertos": 11,
+      "taxa_aprovacao": 1.0,
+      "erros_execucao": 0,
+      "abstencoes": 3,
+      "latencia_mediana_s": 7.46,
+      "latencia_max_s": 16.14,
+      "chamadas_llm": 13,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 17295,
+      "tokens_saida": 7117,
+      "custo_estimado_usd": 0.005288,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    },
+    "v2": {
+      "casos_totais": 13,
+      "casos_automaticos": 11,
+      "acertos": 10,
+      "taxa_aprovacao": 0.909,
+      "erros_execucao": 1,
+      "abstencoes": 3,
+      "latencia_mediana_s": 11.47,
+      "latencia_max_s": 17.28,
+      "chamadas_llm": 26,
+      "chamadas_tool": 6,
+      "erros_tool": 0,
+      "tokens_entrada": 25563,
+      "tokens_saida": 9296,
+      "custo_estimado_usd": 0.007204,
+      "retentativas_por_falha_do_modelo": 0,
+      "limites_estourados": 0
+    }
+  },
+  "memoria": {
+    "sem_memoria": {
+      "turno_1": "A média geral de Campinas, em São Paulo, é 584.24.",
+      "turno_2": "Não é possível responder com os dados disponíveis. A pergunta não especifica a que município, estado ou grupo se refere, nem a métrica exata (por exemplo, média de matemática). Sem essa informação, não é possível responder com os dados disponíveis.",
+      "turno_2_viavel": false,
+      "turno_2_codigo": ""
+    },
+    "com_memoria": [
+      {
+        "turno": 1,
+        "pergunta": "Qual é a média geral de Campinas, em São Paulo?",
+        "codigo": "df.loc[(df.municipio == \"Campinas\") & (df.uf == \"SP\"), \"media_geral\"].iloc[0]",
+        "resposta": "A média geral de Campinas, SP, é 584.24.",
+        "llm": 2
+      },
+      {
+        "turno": 2,
+        "pergunta": "E em matemática?",
+        "codigo": "df.loc[(df.municipio == \"Campinas\") & (df.uf == \"SP\"), \"media_mt\"].iloc[0]",
+        "resposta": "A média de Matemática de Campinas, SP, é 602.83.",
+        "llm": 4
+      },
+      {
+        "turno": 3,
+        "pergunta": "E comparando com a média do estado?",
+        "codigo": "df.loc[df.uf == \"SP\", \"media_mt\"].mean()",
+        "resposta": "A média de Matemática do estado de São Paulo é 531.94.",
+        "llm": 6
+      }
+    ],
+    "custo_contexto": [
+      {
+        "turno": 1,
+        "entradas_no_historico": 1,
+        "chars_historico_compacto": 330,
+        "chars_transcricao_bruta": 246,
+        "tokens_entrada_medidos": 2060,
+        "latencia_s": 23.44
+      },
+      {
+        "turno": 2,
+        "entradas_no_historico": 2,
+        "chars_historico_compacto": 501,
+        "chars_transcricao_bruta": 259,
+        "tokens_entrada_medidos": 4390,
+        "latencia_s": 20.35
+      },
+      {
+        "turno": 3,
+        "entradas_no_historico": 3,
+        "chars_historico_compacto": 678,
+        "chars_transcricao_bruta": 426,
+        "tokens_entrada_medidos": 6844,
+        "latencia_s": 14.22
+      },
+      {
+        "turno": 4,
+        "entradas_no_historico": 4,
+        "chars_historico_compacto": 992,
+        "chars_transcricao_bruta": 593,
+        "tokens_entrada_medidos": 9483,
+        "latencia_s": 19.07
+      },
+      {
+        "turno": 5,
+        "entradas_no_historico": 5,
+        "chars_historico_compacto": 1326,
+        "chars_transcricao_bruta": 606,
+        "tokens_entrada_medidos": 12359,
+        "latencia_s": 18.48
+      }
+    ]
+  },
+  "registros": [
+    {
+      "id": "T01",
+      "tipo": "normal",
+      "config": "v1",
+      "pergunta": "Qual é a média geral do ENEM 2023 no município de Campinas, em São Paulo?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[(df.municipio==\"Campinas\") & (df.uf==\"SP\"), \"media_geral\"].iloc[0]",
+      "resultado_bruto": "584.24",
+      "resposta": "A média geral do ENEM 2023 em Campinas, SP, é 584.24.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 1.03,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1335,
+      "tokens_saida": 602,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T01",
+      "tipo": "normal",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é a média geral do ENEM 2023 no município de Campinas, em São Paulo?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[(df.municipio==\"Campinas\") & (df.uf==\"SP\"), \"media_geral\"].iloc[0]",
+      "resultado_bruto": "584.24",
+      "resposta": "A média geral do ENEM 2023 em Campinas, SP, é 584.24.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 5.95,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1335,
+      "tokens_saida": 602,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T01",
+      "tipo": "normal",
+      "config": "v2",
+      "pergunta": "Qual é a média geral do ENEM 2023 no município de Campinas, em São Paulo?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[(df.municipio=='Campinas') & (df.uf=='SP'), 'media_geral'].iloc[0]",
+      "resultado_bruto": "584.24",
+      "resposta": "A média geral do ENEM 2023 em Campinas, SP, é 584.24.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 10.74,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2076,
+      "tokens_saida": 567,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T02",
+      "tipo": "normal",
+      "config": "v1",
+      "pergunta": "Quantos municípios do estado do Acre estão na base?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.uf == \"AC\").sum())",
+      "resultado_bruto": "22",
+      "resposta": "A base tem 22 municípios do estado do Acre.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 11.15,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1326,
+      "tokens_saida": 221,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T02",
+      "tipo": "normal",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Quantos municípios do estado do Acre estão na base?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.uf == \"AC\").sum())",
+      "resultado_bruto": "22",
+      "resposta": "A base tem 22 municípios do estado do Acre.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 0.59,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1326,
+      "tokens_saida": 221,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T02",
+      "tipo": "normal",
+      "config": "v2",
+      "pergunta": "Quantos municípios do estado do Acre estão na base?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.uf == \"AC\").sum())",
+      "resultado_bruto": "22",
+      "resposta": "A base tem 22 municípios do Acre.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 9.37,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1871,
+      "tokens_saida": 315,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T03",
+      "tipo": "ranking",
+      "config": "v1",
+      "pergunta": "Quais são os 5 municípios de São Paulo com maior média em matemática, considerando apenas municípios com pelo menos 100 participantes?",
+      "aprovado": false,
+      "cobertura": 0.0,
+      "detalhe": "cobertura 0%",
+      "codigo": "df[(df.uf==\\\"SP\\\") & (df.n_participantes>=100)].nlargest(5,'media_mt')[['municipio','media_mt']].reset_index(drop=True)",
+      "resultado_bruto": "sem resultado",
+      "resposta": "A consulta gerada não pôde ser executada. código bloqueado pela guarda de segurança: ['não é uma expressão única: unexpected character after line continuation character']",
+      "viavel": true,
+      "erro_execucao": "código bloqueado pela guarda de segurança: ['não é uma expressão única: unexpected character after line continuation character']",
+      "evidencia": false,
+      "latencia_s": 11.26,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1341,
+      "tokens_saida": 861,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T03",
+      "tipo": "ranking",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Quais são os 5 municípios de São Paulo com maior média em matemática, considerando apenas municípios com pelo menos 100 participantes?",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df[(df.uf == \"SP\") & (df.n_participantes >= 100)].nlargest(5, 'media_mt')[['municipio', 'media_mt']].reset_index(drop=True)",
+      "resultado_bruto": "Valinhos (media_mt: 647.63); São João da Boa Vista (media_mt: 640.98); Amparo (media_mt: 625.08); São José dos Campos (media_mt: 623.02); Jaú (media_mt: 613.55)",
+      "resposta": "Os 5 municípios de São Paulo com maior média em matemática são Valinhos (media_mt: 647.63); São João da Boa Vista (media_mt: 640.98); Amparo (media_mt: 625.08); São José dos Campos (media_mt: 623.02); Jaú (media_mt: 613.55).",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 13.45,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1341,
+      "tokens_saida": 778,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T03",
+      "tipo": "ranking",
+      "config": "v2",
+      "pergunta": "Quais são os 5 municípios de São Paulo com maior média em matemática, considerando apenas municípios com pelo menos 100 participantes?",
+      "aprovado": false,
+      "cobertura": 0.0,
+      "detalhe": "cobertura 0%",
+      "codigo": "df[df.uf==\"SP\" & df.n_participantes>=100].nlargest(5, 'media_mt')[['municipio', 'media_mt']]",
+      "resultado_bruto": "sem resultado",
+      "resposta": "A consulta gerada não pôde ser executada. TypeError: Cannot perform 'rand_' with a dtyped [int64] array and scalar of type [bool]",
+      "viavel": true,
+      "erro_execucao": "TypeError: Cannot perform 'rand_' with a dtyped [int64] array and scalar of type [bool]",
+      "evidencia": false,
+      "latencia_s": 9.59,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1901,
+      "tokens_saida": 932,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T04",
+      "tipo": "agregação por grupo",
+      "config": "v1",
+      "pergunta": "Qual região do país tem a maior média de redação?",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df.groupby('regiao')['media_redacao'].mean().idxmax()",
+      "resultado_bruto": "Sudeste",
+      "resposta": "A região com a maior média de redação é Sudeste.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 12.04,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1327,
+      "tokens_saida": 494,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T04",
+      "tipo": "agregação por grupo",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual região do país tem a maior média de redação?",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df.groupby('regiao')['media_redacao'].mean().idxmax()",
+      "resultado_bruto": "Sudeste",
+      "resposta": "A região com a maior média de redação é Sudeste.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 13.28,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1327,
+      "tokens_saida": 501,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T04",
+      "tipo": "agregação por grupo",
+      "config": "v2",
+      "pergunta": "Qual região do país tem a maior média de redação?",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df.groupby('regiao')['media_redacao'].mean().idxmax()",
+      "resultado_bruto": "Sudeste",
+      "resposta": "A região com a maior média de redação é Sudeste.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 1.1,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1873,
+      "tokens_saida": 536,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T05",
+      "tipo": "normal",
+      "config": "v1",
+      "pergunta": "Quantos municípios têm média geral acima de 550?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.media_geral > 550).sum())",
+      "resultado_bruto": "990",
+      "resposta": "O número de municípios com média geral acima de 550 é 990.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 1.6,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1326,
+      "tokens_saida": 226,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T05",
+      "tipo": "normal",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Quantos municípios têm média geral acima de 550?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.media_geral > 550).sum())",
+      "resultado_bruto": "990",
+      "resposta": "O número de municípios com média geral acima de 550 é 990.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 9.68,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1326,
+      "tokens_saida": 225,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T05",
+      "tipo": "normal",
+      "config": "v2",
+      "pergunta": "Quantos municípios têm média geral acima de 550?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "int((df.media_geral > 550).sum())",
+      "resultado_bruto": "990",
+      "resposta": "O número de municípios com média geral acima de 550 é 990.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 11.47,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1871,
+      "tokens_saida": 324,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T06",
+      "tipo": "cruzamento ENEM×IBGE",
+      "config": "v1",
+      "pergunta": "Qual é a correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[df.n_participantes >= 50, 'pib_per_capita_2021'].corr(df.loc[df.n_participantes >= 50, 'media_geral'])",
+      "resultado_bruto": "0.2868",
+      "resposta": "A correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes é 0.2868.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 1.1,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1345,
+      "tokens_saida": 558,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T06",
+      "tipo": "cruzamento ENEM×IBGE",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é a correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[df.n_participantes >= 50, 'pib_per_capita_2021'].corr(df.loc[df.n_participantes >= 50, 'media_geral'])",
+      "resultado_bruto": "0.2868",
+      "resposta": "A correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes é 0.2868.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 13.36,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1345,
+      "tokens_saida": 746,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T06",
+      "tipo": "cruzamento ENEM×IBGE",
+      "config": "v2",
+      "pergunta": "Qual é a correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.loc[df.n_participantes>=50,'pib_per_capita_2021'].corr(df.loc[df.n_participantes>=50,'media_geral'])",
+      "resultado_bruto": "0.2868",
+      "resposta": "A correlação entre o PIB per capita de 2021 e a média geral do ENEM dos municípios com pelo menos 50 participantes é 0.2868.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 15.89,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1909,
+      "tokens_saida": 696,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T07",
+      "tipo": "cruzamento + composto",
+      "config": "v1",
+      "pergunta": "Entre os 10 municípios mais populosos do país, qual tem a maior média em matemática?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "(df.sort_values('populacao_2021', ascending=False).head(10).sort_values('media_mt', ascending=False).iloc[0]['municipio'])",
+      "resultado_bruto": "Belo Horizonte",
+      "resposta": "O município com maior média em matemática entre os 10 mais populosos é Belo Horizonte.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 12.43,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1335,
+      "tokens_saida": 933,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T07",
+      "tipo": "cruzamento + composto",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Entre os 10 municípios mais populosos do país, qual tem a maior média em matemática?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.nlargest(10, 'populacao_2021').sort_values('media_mt', ascending=False).iloc[0]['municipio']",
+      "resultado_bruto": "Belo Horizonte",
+      "resposta": "O município com maior média em matemática entre os 10 mais populosos é Belo Horizonte.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 16.14,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1335,
+      "tokens_saida": 742,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T07",
+      "tipo": "cruzamento + composto",
+      "config": "v2",
+      "pergunta": "Entre os 10 municípios mais populosos do país, qual tem a maior média em matemática?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "valor=ok, texto_fiel=ok",
+      "codigo": "df.nlargest(10, 'populacao_2021').sort_values('media_mt', ascending=False).iloc[0]['municipio']",
+      "resultado_bruto": "Belo Horizonte",
+      "resposta": "O município com maior média em matemática entre os 10 mais populosos do país é Belo Horizonte.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 15.17,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2076,
+      "tokens_saida": 1991,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T08",
+      "tipo": "comparação entre grupos",
+      "config": "v1",
+      "pergunta": "Compare a média geral dos municípios do Nordeste com a dos municípios do Sul.",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df[df.regiao.isin(['Nordeste','Sul'])].groupby('regiao')['media_geral'].mean()",
+      "resultado_bruto": "Nordeste: 488.64; Sul: 528.01",
+      "resposta": "A média geral dos municípios do Nordeste e do Sul são Nordeste: 488.64; Sul: 528.01.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 15.35,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1330,
+      "tokens_saida": 674,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T08",
+      "tipo": "comparação entre grupos",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Compare a média geral dos municípios do Nordeste com a dos municípios do Sul.",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df[df.regiao.isin(['Nordeste','Sul'])].groupby('regiao')['media_geral'].mean()",
+      "resultado_bruto": "Nordeste: 488.64; Sul: 528.01",
+      "resposta": "A média geral dos municípios do Nordeste e do Sul é Nordeste: 488.64; Sul: 528.01.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 2.45,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1330,
+      "tokens_saida": 994,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T08",
+      "tipo": "comparação entre grupos",
+      "config": "v2",
+      "pergunta": "Compare a média geral dos municípios do Nordeste com a dos municípios do Sul.",
+      "aprovado": true,
+      "cobertura": 1.0,
+      "detalhe": "cobertura 100%",
+      "codigo": "df[df.regiao.isin(['Nordeste','Sul'])].groupby('regiao')['media_geral'].mean()",
+      "resultado_bruto": "Nordeste: 488.64; Sul: 528.01",
+      "resposta": "A média geral dos municípios do Nordeste e do Sul é Nordeste: 488.64; Sul: 528.01",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 16.36,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1879,
+      "tokens_saida": 1217,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T09",
+      "tipo": "informação ausente",
+      "config": "v1",
+      "pergunta": "Qual é a nota média de inglês no ENEM 2023 em Salvador?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. A coluna de média de inglês não está presente no conjunto de dados; apenas médias de Ciências da Natureza, Ciências Humanas, Linguagens e Códigos, Matemática, Redação e geral.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 14.78,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1331,
+      "tokens_saida": 339,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T09",
+      "tipo": "informação ausente",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é a nota média de inglês no ENEM 2023 em Salvador?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. A coluna de média de inglês não está presente no conjunto de dados; apenas médias de Ciências da Natureza, Ciências Humanas, Linguagens e Códigos, Matemática, Redação e geral.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 0.87,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1331,
+      "tokens_saida": 339,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T09",
+      "tipo": "informação ausente",
+      "config": "v2",
+      "pergunta": "Qual é a nota média de inglês no ENEM 2023 em Salvador?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. Não há coluna de média de inglês no conjunto de dados; apenas médias de Ciências da Natureza, Ciências Humanas, Linguagens e Códigos, Matemática, Redação e média geral.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 4.02,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2070,
+      "tokens_saida": 470,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T10",
+      "tipo": "informação ausente",
+      "config": "v1",
+      "pergunta": "Qual é o IDH de Recife?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte não tem dados de IDH; as colunas cobrem notas do ENEM 2023, população e PIB municipais.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 10.75,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 154,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T10",
+      "tipo": "informação ausente",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é o IDH de Recife?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte não tem dados de IDH; as colunas cobrem notas do ENEM 2023, população e PIB municipais.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 0.43,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 154,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T10",
+      "tipo": "informação ausente",
+      "config": "v2",
+      "pergunta": "Qual é o IDH de Recife?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte não contém a coluna IDH; as colunas disponíveis são apenas dados do ENEM 2023 e indicadores do IBGE de 2021 (população, PIB, médias de notas, etc.).",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 15.59,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2052,
+      "tokens_saida": 294,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T11",
+      "tipo": "fora do recorte temporal",
+      "config": "v1",
+      "pergunta": "Qual foi a média geral do ENEM 2019 em Belo Horizonte?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte dos dados contém apenas o ENEM de 2023; não há informações sobre o ENEM de 2019.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 7.7,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1330,
+      "tokens_saida": 264,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T11",
+      "tipo": "fora do recorte temporal",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual foi a média geral do ENEM 2019 em Belo Horizonte?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte dos dados contém apenas indicadores do ENEM 2023; a média geral de 2019 não está disponível nas colunas fornecidas.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 9.66,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1330,
+      "tokens_saida": 208,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T11",
+      "tipo": "fora do recorte temporal",
+      "config": "v2",
+      "pergunta": "Qual foi a média geral do ENEM 2019 em Belo Horizonte?",
+      "aprovado": true,
+      "cobertura": null,
+      "detalhe": "abstenção válida",
+      "codigo": "",
+      "resultado_bruto": "sem resultado",
+      "resposta": "Não é possível responder com os dados disponíveis. O recorte dos dados contém apenas indicadores do ENEM 2023; a média geral do ENEM 2019 não está disponível.",
+      "viavel": false,
+      "erro_execucao": null,
+      "evidencia": null,
+      "latencia_s": 15.81,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2068,
+      "tokens_saida": 342,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T12",
+      "tipo": "ambíguo",
+      "config": "v1",
+      "pergunta": "Qual é o melhor município para estudar?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df.nlargest(1, 'media_geral')[['municipio', 'uf', 'media_geral']]",
+      "resultado_bruto": "Uru / SP (media_geral: 741)",
+      "resposta": "O melhor município para estudar é Uru / SP (media_geral: 741).",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 9.7,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 670,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T12",
+      "tipo": "ambíguo",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é o melhor município para estudar?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df.nlargest(1, 'media_geral')[['municipio', 'uf', 'media_geral']]",
+      "resultado_bruto": "Uru / SP (media_geral: 741)",
+      "resposta": "O melhor município para estudar é Uru / SP (media_geral: 741).",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 4.39,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 804,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T12",
+      "tipo": "ambíguo",
+      "config": "v2",
+      "pergunta": "Qual é o melhor município para estudar?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df.nlargest(1,'media_geral')[['municipio','uf','media_geral']]",
+      "resultado_bruto": "Uru / SP (media_geral: 741)",
+      "resposta": "O melhor município para estudar é Uru / SP (media_geral: 741).",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 8.66,
+      "chamadas_llm": 2,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1865,
+      "tokens_saida": 748,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T13",
+      "tipo": "ambíguo",
+      "config": "v1",
+      "pergunta": "Qual é a média de São Paulo?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df.loc[(df.municipio == \"São Paulo\") & (df.uf == \"SP\"), \"media_geral\"].iloc[0]",
+      "resultado_bruto": "572.26",
+      "resposta": "A média geral do ENEM 2023 em São Paulo é 572.26.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 3.22,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 807,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T13",
+      "tipo": "ambíguo",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é a média de São Paulo?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df.loc[(df.municipio == \"São Paulo\") & (df.uf == \"SP\"), \"media_geral\"].iloc[0]",
+      "resultado_bruto": "572.26",
+      "resposta": "A média de São Paulo é 572.26.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 7.46,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1323,
+      "tokens_saida": 803,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T13",
+      "tipo": "ambíguo",
+      "config": "v2",
+      "pergunta": "Qual é a média de São Paulo?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "sum(df.loc[(df.municipio==\"São Paulo\") & (df.uf==\"SP\"), \"media_geral\"]) / len(df.loc[(df.municipio==\"São Paulo\") & (df.uf==\"SP\"), \"media_geral\"])",
+      "resultado_bruto": "572.26",
+      "resposta": "A média geral do ENEM 2023 em São Paulo é 572.26.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 17.28,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2052,
+      "tokens_saida": 864,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T14",
+      "tipo": "entidade / grafia do IBGE",
+      "config": "v1",
+      "pergunta": "Qual é a média em matemática de Santana do Livramento?",
+      "aprovado": false,
+      "cobertura": null,
+      "detalhe": "valor=errado, texto_fiel=nao",
+      "codigo": "df.loc[df.municipio == \"Santana do Livramento\", \"media_mt\"].iloc[0]",
+      "resultado_bruto": "sem resultado",
+      "resposta": "A consulta gerada não pôde ser executada. IndexError: single positional indexer is out-of-bounds",
+      "viavel": true,
+      "erro_execucao": "IndexError: single positional indexer is out-of-bounds",
+      "evidencia": false,
+      "latencia_s": 3.01,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1327,
+      "tokens_saida": 550,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T14",
+      "tipo": "entidade / grafia do IBGE",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Qual é a média em matemática de Santana do Livramento?",
+      "aprovado": false,
+      "cobertura": null,
+      "detalhe": "valor=errado, texto_fiel=nao",
+      "codigo": "df.loc[df.municipio == \"Santana do Livramento\", \"media_mt\"].iloc[0]",
+      "resultado_bruto": "sem resultado",
+      "resposta": "A consulta gerada não pôde ser executada. IndexError: single positional indexer is out-of-bounds",
+      "viavel": true,
+      "erro_execucao": "IndexError: single positional indexer is out-of-bounds",
+      "evidencia": false,
+      "latencia_s": 13.26,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1327,
+      "tokens_saida": 694,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T14",
+      "tipo": "entidade / grafia do IBGE",
+      "config": "v2",
+      "pergunta": "Qual é a média em matemática de Santana do Livramento?",
+      "aprovado": false,
+      "cobertura": null,
+      "detalhe": "valor=errado, texto_fiel=nao",
+      "codigo": "df.loc[df.municipio == \\\"Sant'Ana do Livramento\\\", \\\"media_mt\\\"].iloc[0]",
+      "resultado_bruto": "sem resultado",
+      "resposta": "A consulta gerada não pôde ser executada. código bloqueado pela guarda de segurança: ['não é uma expressão única: unexpected character after line continuation character']",
+      "viavel": true,
+      "erro_execucao": "código bloqueado pela guarda de segurança: ['não é uma expressão única: unexpected character after line continuation character']",
+      "evidencia": false,
+      "latencia_s": 18.94,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2066,
+      "tokens_saida": 1021,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T15",
+      "tipo": "homônimos",
+      "config": "v1",
+      "pergunta": "Quantos participantes teve Bom Jesus?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "df[df.municipio == \"Bom Jesus\"][\"n_participantes\"].sum()",
+      "resultado_bruto": "169",
+      "resposta": "O município de Bom Jesus teve 169 participantes.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 5.02,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1322,
+      "tokens_saida": 1342,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T15",
+      "tipo": "homônimos",
+      "config": "v2 sem ferramenta",
+      "pergunta": "Quantos participantes teve Bom Jesus?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "int(df[df.municipio == \"Bom Jesus\"][\"n_participantes\"].sum())",
+      "resultado_bruto": "169",
+      "resposta": "O município de Bom Jesus teve 169 participantes no ENEM 2023.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 7.82,
+      "chamadas_llm": 1,
+      "chamadas_tool": 0,
+      "erros_tool": 0,
+      "tokens_entrada": 1322,
+      "tokens_saida": 1074,
+      "rodadas_busca": 0,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    },
+    {
+      "id": "T15",
+      "tipo": "homônimos",
+      "config": "v2",
+      "pergunta": "Quantos participantes teve Bom Jesus?",
+      "aprovado": null,
+      "cobertura": null,
+      "detalhe": "rubrica manual",
+      "codigo": "int(df[df.municipio == \"Bom Jesus\"].n_participantes.sum())",
+      "resultado_bruto": "169",
+      "resposta": "O número total de participantes em todos os municípios chamados Bom Jesus é 169.",
+      "viavel": true,
+      "erro_execucao": null,
+      "evidencia": true,
+      "latencia_s": 21.15,
+      "chamadas_llm": 2,
+      "chamadas_tool": 1,
+      "erros_tool": 0,
+      "tokens_entrada": 2161,
+      "tokens_saida": 672,
+      "rodadas_busca": 1,
+      "limite_estourado": false,
+      "tentativas_modelo": 1,
+      "falha_modelo": null
+    }
+  ],
+  "logs": {
+    "T01|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 5.94,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3693
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[(df.municipio==\"Campinas\") & (df.uf==\"SP\"), \"media_geral\"].iloc[0]",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T01|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 0.35,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Campinas",
+              "uf": "SP"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 9.86,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 4417
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[(df.municipio=='Campinas') & (df.uf=='SP'), 'media_geral'].iloc[0]",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T02|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 0.59,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3671
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int((df.uf == \"AC\").sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T02|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 3.76,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 5.6,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3671
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int((df.uf == \"AC\").sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T03|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 13.44,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3754
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df[(df.uf == \"SP\") & (df.n_participantes >= 100)].nlargest(5, 'media_mt')[['municipio', 'media_mt']].reset_index(drop=True)",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T03|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 0.41,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 9.17,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3754
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.01,
+        "codigo": "df[df.uf==\"SP\" & df.n_participantes>=100].nlargest(5, 'media_mt')[['municipio', 'media_mt']]",
+        "erro": "TypeError: Cannot perform 'rand_' with a dtyped [int64] array and scalar of type [bool]"
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T04|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 13.28,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3669
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.groupby('regiao')['media_redacao'].mean().idxmax()",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T04|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 0.34,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 0.75,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3669
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.groupby('regiao')['media_redacao'].mean().idxmax()",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T05|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 9.67,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3668
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int((df.media_geral > 550).sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T05|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 4.39,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 7.08,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3668
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int((df.media_geral > 550).sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T06|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 13.36,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3742
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[df.n_participantes >= 50, 'pib_per_capita_2021'].corr(df.loc[df.n_participantes >= 50, 'media_geral'])",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T06|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 5.71,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 10.18,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3742
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[df.n_participantes>=50,'pib_per_capita_2021'].corr(df.loc[df.n_participantes>=50,'media_geral'])",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T07|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 16.13,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3704
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.nlargest(10, 'populacao_2021').sort_values('media_mt', ascending=False).iloc[0]['municipio']",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T07|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 1.06,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "São Paulo",
+              "uf": "SP"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 13.6,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 4431
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.nlargest(10, 'populacao_2021').sort_values('media_mt', ascending=False).iloc[0]['municipio']",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T08|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 2.45,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3697
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df[df.regiao.isin(['Nordeste','Sul'])].groupby('regiao')['media_geral'].mean()",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T08|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 9.57,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 6.77,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3697
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df[df.regiao.isin(['Nordeste','Sul'])].groupby('regiao')['media_geral'].mean()",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T09|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 0.87,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 3675
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T09|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 0.72,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Salvador",
+              "uf": "BA"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 2.74,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 4399
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T10|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 0.43,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 3643
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T10|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 3.49,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Recife",
+              "uf": "PE"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 11.56,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 4363
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T11|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 9.66,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 3674
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T11|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 4.43,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Belo Horizonte",
+              "uf": "MG"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 10.8,
+        "erro_parse": null,
+        "viavel": false,
+        "prompt_chars": 4410
+      },
+      {
+        "no": "abstencao"
+      }
+    ],
+    "T12|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 4.38,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3659
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.nlargest(1, 'media_geral')[['municipio', 'uf', 'media_geral']]",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T12|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 0.26,
+        "tool_calls": [],
+        "texto": "sem municipio"
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 8.39,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3659
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.nlargest(1,'media_geral')[['municipio','uf','media_geral']]",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T13|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 7.46,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3648
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[(df.municipio == \"São Paulo\") & (df.uf == \"SP\"), \"media_geral\"].iloc[0]",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T13|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 3.48,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "São Paulo"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 13.24,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 4375
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "sum(df.loc[(df.municipio==\"São Paulo\") & (df.uf==\"SP\"), \"media_geral\"]) / len(df.loc[(df.municipio==\"São Paulo\") & (df.uf==\"SP\"), \"media_geral\"])",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T14|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 13.26,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3674
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[df.municipio == \"Santana do Livramento\", \"media_mt\"].iloc[0]",
+        "erro": "IndexError: single positional indexer is out-of-bounds"
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T14|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 6.5,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Santana do Livramento"
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 11.92,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 4424
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "df.loc[df.municipio == \\\"Sant'Ana do Livramento\\\", \\\"media_mt\\\"].iloc[0]",
+        "erro": "código bloqueado pela guarda de segurança: ['não é uma expressão única: unexpected character after line continuation character']"
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T15|v2 sem ferramenta": [
+      {
+        "no": "planejador",
+        "duracao_s": 7.82,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 3657
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int(df[df.municipio == \"Bom Jesus\"][\"n_participantes\"].sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ],
+    "T15|v2": [
+      {
+        "no": "resolvedor",
+        "duracao_s": 9.52,
+        "tool_calls": [
+          [
+            "buscar_municipio",
+            {
+              "nome": "Bom Jesus",
+              "uf": null
+            }
+          ]
+        ],
+        "texto": ""
+      },
+      {
+        "no": "planejador",
+        "duracao_s": 11.07,
+        "erro_parse": null,
+        "viavel": true,
+        "prompt_chars": 4737
+      },
+      {
+        "no": "executor",
+        "duracao_s": 0.0,
+        "codigo": "int(df[df.municipio == \"Bom Jesus\"].n_participantes.sum())",
+        "erro": null
+      },
+      {
+        "no": "formatador"
+      }
+    ]
+  }
+}
