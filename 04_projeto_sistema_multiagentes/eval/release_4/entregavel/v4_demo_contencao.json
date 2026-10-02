@@ -1,0 +1,119 @@
+{
+ "medido_em": "2026-09-21T08:38:37",
+ "falha_prob": 0.6,
+ "pergunta": "Qual é a média em matemática de Santana do Livramento?",
+ "texto": "[resposta em modo degradado] a identidade do município não pôde ser confirmada: a fonte de identidade não respondeu.\nNão é possível responder com os dados disponíveis. A identidade do município 'Santana do Livramento' não foi verificada no conjunto de dados; portanto não é possível determinar a média em matemática.\n\nRecorte: ENEM 2023, apenas candidatos com escola declarada, presentes nos dois dias e com as cinco notas (721.429 de ~3,9 milhões de inscritos), agregados pelo município da escola. Indicadores do IBGE são de 2021.",
+ "metricas": {
+  "latencia_s": 3.76,
+  "chamadas_llm": 3,
+  "chamadas_tool": 1,
+  "erros_tool": 0,
+  "tokens_entrada": 2820,
+  "tokens_saida": 940,
+  "rota": [
+   "resolvedor",
+   "planejador",
+   "abstencao",
+   "sintetizador",
+   "conferencia"
+  ],
+  "reescritas": 0,
+  "refeitos_sem_llm": 0,
+  "rodadas_busca": 1,
+  "limite_estourado": false,
+  "laco_agente_cortado": false,
+  "degradado": true,
+  "motivos_degradacao": [
+   "a identidade do município não pôde ser confirmada: a fonte de identidade não respondeu"
+  ],
+  "problemas_verificacao": [],
+  "redes_de_seguranca": [],
+  "veredito": "nenhum",
+  "via_veredito": null,
+  "tentativas_extras": 0,
+  "tempo_limite_esgotado": 0,
+  "erro_parse": null,
+  "erro_chamada": null
+ },
+ "trace": [
+  {
+   "etapa": "resolvedor",
+   "papel": "agente",
+   "chamadas_llm": 1,
+   "chamadas_tool": 1,
+   "latencia_s": 0.6,
+   "decisao": "buscar",
+   "motivo": "a pergunta cita municípios",
+   "tool_calls": [
+    [
+     "buscar_municipio",
+     {
+      "nome": "Santana do Livramento",
+      "uf": null
+     }
+    ]
+   ],
+   "tentativas": 1,
+   "tokens_entrada": 531,
+   "tokens_saida": 165
+  },
+  {
+   "etapa": "planejador",
+   "papel": "etapa",
+   "chamadas_llm": 1,
+   "fonte_degradada": true,
+   "latencia_s": 0.87,
+   "decisao": "primeira tentativa",
+   "motivo": "prompt idêntico ao da v1",
+   "prompt_chars": 4522,
+   "tentativas": 1,
+   "erro_parse": null,
+   "viavel": false,
+   "tokens_entrada": 1534,
+   "tokens_saida": 364
+  },
+  {
+   "etapa": "abstencao",
+   "papel": "etapa",
+   "decisao": "não viável",
+   "motivo": "A identidade do município 'Santana do Livramento' não foi verificada no conjunto de dados; portanto não é possível determinar a média em matemática."
+  },
+  {
+   "etapa": "sintetizador",
+   "papel": "agente",
+   "chamadas_llm": 1,
+   "latencia_s": 0.79,
+   "decisao": "redigir",
+   "motivo": "abstenção",
+   "rede_de_seguranca": [],
+   "ressalvas": 1,
+   "tentativas": 1,
+   "tokens_entrada": 755,
+   "tokens_saida": 411
+  },
+  {
+   "etapa": "conferencia",
+   "papel": "etapa",
+   "latencia_s": 0.0,
+   "decisao": "ok",
+   "motivo": "nenhum problema",
+   "problemas": []
+  }
+ ],
+ "ferramenta": {
+  "chamadas": 1,
+  "tentativas": 3,
+  "falhas_injetadas": 3,
+  "esgotamentos": 1,
+  "degradacoes": 1
+ },
+ "registro_ferramenta": [
+  {
+   "nome": "Santana do Livramento",
+   "uf": null,
+   "tentativas": 3,
+   "erro": "FonteIndisponivel: a fonte de identidade não respondeu ao consultar 'Santana do Livramento'",
+   "degradado": true
+  }
+ ]
+}
