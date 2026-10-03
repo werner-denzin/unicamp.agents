@@ -3,7 +3,7 @@
 **INF0093 — 2S/2026** · Rodolfo Dalla Costa, Thais Caroline Murer, Werner Conrado Jacob Denzin
 Sistema multiagente para perguntas em linguagem natural sobre dados educacionais brasileiros.
 
-Os números vêm dos 13 casos congelados do E1, os únicos que as quatro versões enfrentaram. Detalhes e evidência: `E4_DallaCosta_Murer_Denzin.ipynb`.
+Os números vêm dos 13 casos congelados do E1, os únicos que as quatro versões enfrentaram. As contagens de detecções e a coluna "completo" da qualidade ponderada usam as 57 execuções dos 19 casos da v4. Detalhes e evidência: `E4_DallaCosta_Murer_Denzin.ipynb`.
 
 ---
 
@@ -17,7 +17,7 @@ Os números vêm dos 13 casos congelados do E1, os únicos que as quatro versõe
 | Agentes | 0 | 1 (Resolvedor) | 3 | 3 + nó de conferência |
 | Chamadas ao LLM | 13 | 26 | 67 | 57,7 |
 | Chamadas a ferramenta | 0 | 6 | 8 | 10,7 |
-| Tokens por pergunta | 1.854 | 2.682 | 5.977 | 5.892 |
+| Tokens por pergunta | 1.869 | 2.682 | 5.977 | 5.892 |
 | Latência mediana | 5,16 s | 11,47 s | 4,83 s | 5,03 s |
 | Latência máxima | 15,84 s | 17,28 s | 35,39 s | 25,53 s |
 | Custo por pergunta | US$ 0,0004 | US$ 0,0006 | US$ 0,0015 | US$ 0,0015 |
@@ -38,8 +38,8 @@ A taxa de acerto não variou entre versões além do que a própria v1 e a v2 va
 ### v2 → v3: divisão em agentes
 
 * Validador (julga o resultado antes de entregar) e Sintetizador (escreve o texto depois de o número existir).
-* Custo: +158% de chamadas (26 → 67) e +160% em dólar.
-* Acerto: empate. Recuperou 3 de 3 falhas de geração de código e a rubrica de ambiguidade subiu de 1 para 5 pontos. Introduziu duas regressões (T15 e T18).
+* Custo: +158% de chamadas (26 → 67) e +162% em dólar.
+* Acerto: empate. Recuperou 3 de 3 falhas de geração de código e a soma da rubrica manual subiu de 1 para 5 pontos (T12, T13 e T15 na v2; T12, T13, T15 e T16 na v3). Introduziu duas regressões (T15 e T18).
 
 ### v3 → v4: robustez e verificação
 
@@ -61,7 +61,7 @@ O acerto empata (11/11). A v1 é a escolha adequada se o critério for custo e a
 
 ### v4 × v2
 
-A v2 custa cerca de 2,7 vezes menos, mas não julga o próprio resultado: código recusado pela guarda chegava ao usuário como mensagem de erro, sem segunda tentativa. A v4 recupera esses casos e, em uma das rodadas, sem chamada ao modelo.
+A v2 custa cerca de 2,6 vezes menos, mas não julga o próprio resultado: código recusado pela guarda chegava ao usuário como mensagem de erro, sem segunda tentativa. A v4 recupera esses casos e, em uma das rodadas, sem chamada ao modelo.
 
 ### v4 × v3
 
