@@ -12,11 +12,11 @@ Resultado correto: **530,26** de média em matemática e **275** participantes.
 
 ## 1. Na véspera: preparar uma cópia do entregável
 
-Não rode a demonstração na pasta `entregavel/`. O "Executar tudo" regrava `servidor_mcp.log` e `e4_resultados.json`, que são parte da entrega.
+Não rode a demonstração na pasta `20261003_v_entregavel/`. O "Executar tudo" regrava `servidor_mcp.log` e `e4_resultados.json`, que são parte da entrega.
 
 ```bash
 cd 04_projeto_sistema_multiagentes/eval/release_4
-cp -r entregavel demo_ao_vivo        # não fazer commit desta pasta
+cp -r 20261003_v_entregavel demo_ao_vivo        # não fazer commit desta pasta
 ```
 
 Mantenha a cópia dentro de `eval/`. O notebook procura a chave em `eval/.secret` (até 4 pastas acima). Fora dali, defina a variável `GROQ_API_KEY` antes de abrir o Jupyter.

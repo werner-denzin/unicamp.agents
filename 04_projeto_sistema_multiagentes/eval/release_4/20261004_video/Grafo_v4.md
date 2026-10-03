@@ -1,6 +1,6 @@
 # Grafo da v4
 
-Descrição do grafo LangGraph da v4, montado por `construir_grafo_v4` na célula **C.3** do notebook `entregavel/E4_DallaCosta_Murer_Denzin.ipynb`.
+Descrição do grafo LangGraph da v4, montado por `construir_grafo_v4` na célula **C.3** do notebook `20261003_v_entregavel/E4_DallaCosta_Murer_Denzin.ipynb`.
 
 O grafo tem **8 nós**. O slide 5 da apresentação mostra 6 deles; `ferramentas` e `abstencao` aparecem só na legenda.
 
