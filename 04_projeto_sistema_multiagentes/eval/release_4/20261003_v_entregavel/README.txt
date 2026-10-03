@@ -57,6 +57,12 @@ e4_resultados.json
     mecanismos de contenção, confiabilidade, comparações, custo por etapa, pesos de
     gravidade, matriz de consequências, pares mínimos, registros e traces.
 
+baseline_v1_resultados.json, v2_resultados.json, v3_resultados.json
+    Os resultados das versões anteriores, copiados dos entregáveis E1, E2 e E3
+    sem alteração. O notebook os lê daqui quando estão ao lado dele e os baixa
+    do repositório quando não estão (Colab). São a origem dos números da v1, v2
+    e v3 na comparação das quatro versões (seção A.4).
+
 
 O QUE MUDA DA v3 PARA A v4
 --------------------------
@@ -118,7 +124,7 @@ ele lê o que já está medido. Para refazer alguma medição, apague o arquivo
 correspondente.
 
 As três rodadas foram medidas entre 23/09/2026 e 24/09/2026; a execução final do
-notebook leu os checkpoints, e por isso o RUN_INFO_V4 traz a data dessa execução.
+notebook, em 02/10/2026, leu os checkpoints, e por isso o RUN_INFO_V4 traz essa data.
 
 A chave usada tem 200.000 tokens por dia e 8.000 por minuto. Uma rodada completa
 consome cerca de 115.000 tokens, então a medição desta entrega levou três dias de
